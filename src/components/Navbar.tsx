@@ -1,18 +1,42 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 import { 
   PawPrint, 
   Heart, 
   User, 
   Menu, 
   X, 
-  LogIn
+  LogIn,
+  LogOut
 } from "lucide-react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Logged out successfully",
+        description: "You have been logged out of your account",
+      });
+      navigate('/');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "There was an error logging out",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
@@ -43,18 +67,35 @@ const Navbar = () => {
                 <Heart className="w-5 h-5" />
               </Button>
             </Link>
-            <Link to="/login">
-              <Button variant="outline" className="gap-2">
-                <LogIn className="w-4 h-4" />
-                Sign In
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button className="gap-2 bg-primary hover:bg-primary/90">
-                <User className="w-4 h-4" />
-                Sign Up
-              </Button>
-            </Link>
+            {user ? (
+              <>
+                <Link to="/profile">
+                  <Button variant="outline" className="gap-2">
+                    <User className="w-4 h-4" />
+                    Profile
+                  </Button>
+                </Link>
+                <Button onClick={handleLogout} className="gap-2">
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="outline" className="gap-2">
+                    <LogIn className="w-4 h-4" />
+                    Sign In
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button className="gap-2 bg-primary hover:bg-primary/90">
+                    <User className="w-4 h-4" />
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -99,12 +140,23 @@ const Navbar = () => {
               Contact
             </Link>
             <div className="pt-2 border-t flex gap-2">
-              <Link to="/login" className="w-1/2" onClick={() => setIsMenuOpen(false)}>
-                <Button variant="outline" className="w-full">Sign In</Button>
-              </Link>
-              <Link to="/signup" className="w-1/2" onClick={() => setIsMenuOpen(false)}>
-                <Button className="w-full bg-primary hover:bg-primary/90">Sign Up</Button>
-              </Link>
+              {user ? (
+                <>
+                  <Link to="/profile" className="w-1/2" onClick={() => setIsMenuOpen(false)}>
+                    <Button variant="outline" className="w-full">Profile</Button>
+                  </Link>
+                  <Button onClick={handleLogout} className="w-1/2">Sign Out</Button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="w-1/2" onClick={() => setIsMenuOpen(false)}>
+                    <Button variant="outline" className="w-full">Sign In</Button>
+                  </Link>
+                  <Link to="/signup" className="w-1/2" onClick={() => setIsMenuOpen(false)}>
+                    <Button className="w-full bg-primary hover:bg-primary/90">Sign Up</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}
