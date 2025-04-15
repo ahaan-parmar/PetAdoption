@@ -97,7 +97,7 @@ export const BreedField = ({ value, onChange, species }: BreedFieldProps) => {
           <SelectValue placeholder={species ? "Select breed" : "Select species first"} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All breeds</SelectItem>
+          <SelectItem value="all">All breeds</SelectItem>
           {breeds.map((breed) => (
             <SelectItem key={breed} value={breed}>
               {breed}

@@ -149,12 +149,12 @@ const About = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="space-y-4">
                 <h3 className="text-xl font-semibold">Adoption</h3>
-                <ul className="space-y-2 text-muted-foreground">
+                <ul className="space-y-2">
                   <li><Link to="/pets" className="hover:text-primary">Browse Pets</Link></li>
-                  <li><Link to="/pets?species=Dog" className="hover:text-primary">Dogs</Link></li>
-                  <li><Link to="/pets?species=Cat" className="hover:text-primary">Cats</Link></li>
-                  <li><Link to="/pets?species=Bird" className="hover:text-primary">Birds</Link></li>
-                  <li><Link to="/pets?species=Small" className="hover:text-primary">Small Pets</Link></li>
+                  <li><Link to="/pets?type=dog" className="hover:text-primary">Dogs</Link></li>
+                  <li><Link to="/pets?type=cat" className="hover:text-primary">Cats</Link></li>
+                  <li><Link to="/pets?type=bird" className="hover:text-primary">Birds</Link></li>
+                  <li><Link to="/pets?type=small" className="hover:text-primary">Small Pets</Link></li>
                 </ul>
               </div>
               <div className="space-y-4">

@@ -21,7 +21,7 @@ export const GenderField = ({ value, onChange }: GenderFieldProps) => {
           <SelectValue placeholder="Any gender" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">Any gender</SelectItem>
+          <SelectItem value="any">Any gender</SelectItem>
           <SelectItem value="Male">Male</SelectItem>
           <SelectItem value="Female">Female</SelectItem>
         </SelectContent>

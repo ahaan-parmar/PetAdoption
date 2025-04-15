@@ -1,4 +1,3 @@
-
 import {
   Select,
   SelectContent,
@@ -22,11 +21,11 @@ export const SpeciesField = ({ value, onChange }: SpeciesFieldProps) => {
           <SelectValue placeholder="All animals" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All animals</SelectItem>
-          <SelectItem value="Dog">Dogs</SelectItem>
-          <SelectItem value="Cat">Cats</SelectItem>
-          <SelectItem value="Bird">Birds</SelectItem>
-          <SelectItem value="Small">Small Animals</SelectItem>
+          <SelectItem value="all">All animals</SelectItem>
+          <SelectItem value="dog">Dogs</SelectItem>
+          <SelectItem value="cat">Cats</SelectItem>
+          <SelectItem value="bird">Birds</SelectItem>
+          <SelectItem value="small">Small Animals</SelectItem>
         </SelectContent>
       </Select>
     </div>

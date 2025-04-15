@@ -26,16 +26,26 @@ const AllPets = () => {
   const [sortBy, setSortBy] = useState(searchParams.get("sort") || "newest");
   const [filters, setFilters] = useState({
     search: searchParams.get("search") || "",
-    species: searchParams.get("species") || "",
+    species: searchParams.get("type") || "",
     breed: searchParams.get("breed") || "",
-    ageRange: [0, 10],
+    ageRange: [
+      parseInt(searchParams.get("minAge") || "0"),
+      parseInt(searchParams.get("maxAge") || "10")
+    ],
     gender: searchParams.get("gender") || "",
     location: searchParams.get("location") || "",
   });
 
+  // Extract numeric age from string (e.g., "3 years" -> 3)
+  const getNumericAge = (ageString: string): number => {
+    const match = ageString.match(/(\d+)/);
+    return match ? parseInt(match[1]) : 0;
+  };
+
   useEffect(() => {
     if (pets.length === 0) return;
 
+    setIsLoading(true);
     let result = [...pets];
 
     if (filters.search) {
@@ -43,12 +53,21 @@ const AllPets = () => {
       result = result.filter(
         (pet) =>
           pet.name.toLowerCase().includes(searchTerm) ||
-          pet.breed.toLowerCase().includes(searchTerm)
+          pet.breed.toLowerCase().includes(searchTerm) ||
+          pet.species.toLowerCase().includes(searchTerm) ||
+          pet.location.toLowerCase().includes(searchTerm)
       );
     }
 
-    if (filters.species) {
-      result = result.filter((pet) => pet.species === filters.species);
+    if (filters.species && filters.species !== 'all') {
+      const typeMap: { [key: string]: string } = {
+        'dog': 'Dog',
+        'cat': 'Cat',
+        'bird': 'Bird',
+        'small': 'Small Animal'
+      };
+      const speciesValue = typeMap[filters.species.toLowerCase()];
+      result = result.filter((pet) => pet.species === speciesValue);
     }
 
     if (filters.breed) {
@@ -56,7 +75,7 @@ const AllPets = () => {
     }
 
     result = result.filter((pet) => {
-      const age = parseInt(pet.age);
+      const age = getNumericAge(pet.age);
       return age >= filters.ageRange[0] && age <= filters.ageRange[1];
     });
 
@@ -76,17 +95,17 @@ const AllPets = () => {
         case "name":
           return a.name.localeCompare(b.name);
         case "age":
-          return parseInt(a.age) - parseInt(b.age);
+          return getNumericAge(a.age) - getNumericAge(b.age);
         case "oldest":
-          return parseInt(b.age) - parseInt(a.age);
+          return getNumericAge(b.age) - getNumericAge(a.age);
         case "newest":
         default:
-          // For mock data, we'll just sort by ID in reverse
           return b.id.localeCompare(a.id);
       }
     });
 
     setFilteredPets(result);
+    setIsLoading(false);
   }, [filters, pets, sortBy]);
 
   const handleFilterChange = (
@@ -101,11 +120,13 @@ const AllPets = () => {
     
     const newSearchParams = new URLSearchParams();
     if (filters.search) newSearchParams.set("search", filters.search);
-    if (filters.species) newSearchParams.set("species", filters.species);
+    if (filters.species) newSearchParams.set("type", filters.species);
     if (filters.breed) newSearchParams.set("breed", filters.breed);
     if (filters.gender) newSearchParams.set("gender", filters.gender);
     if (filters.location) newSearchParams.set("location", filters.location);
     if (sortBy) newSearchParams.set("sort", sortBy);
+    newSearchParams.set("minAge", filters.ageRange[0].toString());
+    newSearchParams.set("maxAge", filters.ageRange[1].toString());
     
     setSearchParams(newSearchParams);
   };

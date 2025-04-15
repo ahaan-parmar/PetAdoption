@@ -20,6 +20,13 @@ import NotFound from "./pages/NotFound";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import Donate from "@/pages/Donate";
+import Volunteer from "@/pages/Volunteer";
+
+// Category Pages
+import Dogs from "@/pages/categories/Dogs";
+import Cats from "@/pages/categories/Cats";
+import Birds from "@/pages/categories/Birds";
+import SmallAnimals from "@/pages/categories/SmallAnimals";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +71,14 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/donate" element={<Donate />} />
+            <Route path="/volunteer" element={<Volunteer />} />
+
+            {/* Category Routes */}
+            <Route path="/categories/dogs" element={<Dogs />} />
+            <Route path="/categories/cats" element={<Cats />} />
+            <Route path="/categories/birds" element={<Birds />} />
+            <Route path="/categories/small-animals" element={<SmallAnimals />} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
