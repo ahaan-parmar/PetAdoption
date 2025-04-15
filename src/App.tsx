@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { PrivateRoute } from "@/components/PrivateRoute";
 
 // Pages
 import Index from "./pages/Index";
@@ -28,7 +29,14 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/pets" element={<AllPets />} />
-            <Route path="/pets/:id" element={<PetDetail />} />
+            <Route 
+              path="/pets/:id" 
+              element={
+                <PrivateRoute>
+                  <PetDetail />
+                </PrivateRoute>
+              } 
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

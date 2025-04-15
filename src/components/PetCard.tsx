@@ -1,11 +1,13 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface Pet {
   id: string;
@@ -25,20 +27,69 @@ interface PetCardProps {
 const PetCard = ({ pet }: PetCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
 
-  const toggleFavorite = (e: React.MouseEvent) => {
+  useEffect(() => {
+    if (user) {
+      checkIfLiked();
+    }
+  }, [user, pet.id]);
+
+  const checkIfLiked = async () => {
+    const { data } = await supabase
+      .from('pet_likes')
+      .select('id')
+      .eq('pet_id', pet.id)
+      .eq('user_id', user?.id)
+      .single();
+    
+    setIsFavorite(!!data);
+  };
+
+  const toggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setIsFavorite(!isFavorite);
-    
-    toast({
-      title: isFavorite ? "Removed from favorites" : "Added to favorites",
-      description: isFavorite 
-        ? `${pet.name} has been removed from your favorites.` 
-        : `${pet.name} has been added to your favorites.`,
-      duration: 3000,
-    });
+    if (!user) {
+      toast({
+        title: "Please log in",
+        description: "You need to be logged in to save favorites",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        await supabase
+          .from('pet_likes')
+          .delete()
+          .eq('pet_id', pet.id)
+          .eq('user_id', user.id);
+      } else {
+        await supabase
+          .from('pet_likes')
+          .insert([
+            { pet_id: pet.id, user_id: user.id }
+          ]);
+      }
+
+      setIsFavorite(!isFavorite);
+      
+      toast({
+        title: isFavorite ? "Removed from favorites" : "Added to favorites",
+        description: isFavorite 
+          ? `${pet.name} has been removed from your favorites.` 
+          : `${pet.name} has been added to your favorites.`,
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "There was an error updating your favorites",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

@@ -1,8 +1,8 @@
-
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Card,
   CardContent,
@@ -26,6 +26,11 @@ const Login = () => {
     rememberMe: false,
   });
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Get the redirect path from location state, default to home
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,10 +41,9 @@ const Login = () => {
     setFormData((prev) => ({ ...prev, rememberMe: checked }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Basic validation
     if (!formData.email || !formData.password) {
       toast({
         title: "Error",
@@ -51,15 +55,30 @@ const Login = () => {
     
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (error) throw error;
+
       toast({
         title: "Success",
         description: "You have been logged in successfully!",
       });
-      // In a real app, you would redirect or update authentication state here
-    }, 1500);
+      
+      // Redirect to the page they tried to visit or home
+      navigate(from, { replace: true });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
