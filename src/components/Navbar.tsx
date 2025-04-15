@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -53,7 +52,7 @@ const Navbar = () => {
               Find Pets
             </Link>
             <Link to="/about" className="font-medium hover:text-primary transition-colors">
-              About Us
+              About
             </Link>
             <Link to="/contact" className="font-medium hover:text-primary transition-colors">
               Contact
@@ -130,7 +129,7 @@ const Navbar = () => {
               className="block font-medium py-2 hover:bg-muted px-2 rounded-md"
               onClick={() => setIsMenuOpen(false)}
             >
-              About Us
+              About
             </Link>
             <Link 
               to="/contact" 

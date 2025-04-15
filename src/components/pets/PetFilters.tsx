@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { SearchField } from "./filters/SearchField";
@@ -6,10 +5,12 @@ import { SpeciesField } from "./filters/SpeciesField";
 import { AgeRangeField } from "./filters/AgeRangeField";
 import { GenderField } from "./filters/GenderField";
 import { LocationField } from "./filters/LocationField";
+import { BreedField } from "./filters/BreedField";
 
 interface FiltersState {
   search: string;
   species: string;
+  breed: string;
   ageRange: number[];
   gender: string;
   location: string;
@@ -51,6 +52,12 @@ export const PetFilters = ({
         <SpeciesField
           value={filters.species}
           onChange={(value) => onFilterChange("species", value)}
+        />
+
+        <BreedField
+          value={filters.breed}
+          onChange={(value) => onFilterChange("breed", value)}
+          species={filters.species}
         />
 
         <AgeRangeField

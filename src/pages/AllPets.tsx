@@ -1,37 +1,37 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Filter, X } from "lucide-react";
+import { Filter, X, Clock } from "lucide-react";
 import { PetFilters } from "@/components/pets/PetFilters";
 import { PetGrid } from "@/components/pets/PetGrid";
 import { MOCK_PETS } from "@/data/mockPets";
-import type { Pet } from "@/components/PetCard";
+import PetCard, { Pet } from "@/components/PetCard";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const AllPets = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [pets, setPets] = useState<Pet[]>([]);
-  const [filteredPets, setFilteredPets] = useState<Pet[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [pets, setPets] = useState<Pet[]>(MOCK_PETS);
+  const [filteredPets, setFilteredPets] = useState<Pet[]>(MOCK_PETS);
+  const [recentPets, setRecentPets] = useState<Pet[]>(MOCK_PETS.slice(0, 4));
+  const [isLoading, setIsLoading] = useState(false);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [sortBy, setSortBy] = useState(searchParams.get("sort") || "newest");
   const [filters, setFilters] = useState({
     search: searchParams.get("search") || "",
     species: searchParams.get("species") || "",
+    breed: searchParams.get("breed") || "",
     ageRange: [0, 10],
     gender: searchParams.get("gender") || "",
     location: searchParams.get("location") || "",
   });
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setPets(MOCK_PETS);
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (pets.length === 0) return;
@@ -51,6 +51,10 @@ const AllPets = () => {
       result = result.filter((pet) => pet.species === filters.species);
     }
 
+    if (filters.breed) {
+      result = result.filter((pet) => pet.breed === filters.breed);
+    }
+
     result = result.filter((pet) => {
       const age = parseInt(pet.age);
       return age >= filters.ageRange[0] && age <= filters.ageRange[1];
@@ -66,8 +70,24 @@ const AllPets = () => {
       );
     }
 
+    // Apply sorting
+    result = [...result].sort((a, b) => {
+      switch (sortBy) {
+        case "name":
+          return a.name.localeCompare(b.name);
+        case "age":
+          return parseInt(a.age) - parseInt(b.age);
+        case "oldest":
+          return parseInt(b.age) - parseInt(a.age);
+        case "newest":
+        default:
+          // For mock data, we'll just sort by ID in reverse
+          return b.id.localeCompare(a.id);
+      }
+    });
+
     setFilteredPets(result);
-  }, [filters, pets]);
+  }, [filters, pets, sortBy]);
 
   const handleFilterChange = (
     key: string,
@@ -82,8 +102,10 @@ const AllPets = () => {
     const newSearchParams = new URLSearchParams();
     if (filters.search) newSearchParams.set("search", filters.search);
     if (filters.species) newSearchParams.set("species", filters.species);
+    if (filters.breed) newSearchParams.set("breed", filters.breed);
     if (filters.gender) newSearchParams.set("gender", filters.gender);
     if (filters.location) newSearchParams.set("location", filters.location);
+    if (sortBy) newSearchParams.set("sort", sortBy);
     
     setSearchParams(newSearchParams);
   };
@@ -92,10 +114,12 @@ const AllPets = () => {
     setFilters({
       search: "",
       species: "",
+      breed: "",
       ageRange: [0, 10],
       gender: "",
       location: "",
     });
+    setSortBy("newest");
     setSearchParams({});
   };
 
@@ -103,6 +127,20 @@ const AllPets = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow container mx-auto px-4 py-8">
+        {/* Recently Added Section */}
+        <div className="mb-12">
+          <div className="flex items-center gap-2 mb-6">
+            <Clock className="w-5 h-5 text-primary" />
+            <h2 className="text-2xl font-semibold">Recently Added</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {recentPets.map((pet) => (
+              <PetCard key={pet.id} pet={pet} />
+            ))}
+          </div>
+        </div>
+
+        {/* Main Search Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold mb-2">Find Your Perfect Pet</h1>
@@ -110,14 +148,27 @@ const AllPets = () => {
               Browse our available pets for adoption
             </p>
           </div>
-          <Button
-            variant="outline"
-            className="mt-4 md:mt-0 gap-2"
-            onClick={() => setIsFilterVisible(!isFilterVisible)}
-          >
-            {isFilterVisible ? <X className="h-4 w-4" /> : <Filter className="h-4 w-4" />}
-            {isFilterVisible ? "Hide Filters" : "Show Filters"}
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 mt-4 md:mt-0 w-full sm:w-auto">
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">Newest First</SelectItem>
+                <SelectItem value="name">Name A-Z</SelectItem>
+                <SelectItem value="age">Age: Youngest First</SelectItem>
+                <SelectItem value="oldest">Age: Oldest First</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => setIsFilterVisible(!isFilterVisible)}
+            >
+              {isFilterVisible ? <X className="h-4 w-4" /> : <Filter className="h-4 w-4" />}
+              {isFilterVisible ? "Hide Filters" : "Show Filters"}
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

@@ -1,4 +1,69 @@
-# Welcome to your Lovable project
+# Pet Adoption Platform
+
+A modern web application for pet adoption built with React, TypeScript, and Supabase.
+
+## Project Overview
+
+This platform allows users to:
+- Browse available pets for adoption
+- Create an account and manage their profile
+- Save favorite pets
+- Contact pet owners/shelters
+
+## Technologies Used
+
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
+- Supabase (Authentication & Database)
+
+## Getting Started
+
+1. Clone the repository:
+```sh
+git clone <YOUR_GIT_URL>
+cd petadoption
+```
+
+2. Install dependencies:
+```sh
+npm install
+```
+
+3. Start the development server:
+```sh
+npm run dev
+```
+
+4. Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## Development
+
+The project uses:
+- Vite for fast development and building
+- TypeScript for type safety
+- shadcn-ui for beautiful, accessible components
+- Tailwind CSS for styling
+- Supabase for backend services
+
+## Deployment
+
+The project can be deployed to any static hosting service that supports Node.js applications, such as:
+- Vercel
+- Netlify
+- GitHub Pages
+
+Make sure to set up the required environment variables for Supabase configuration.
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## Project info
 
@@ -49,16 +114,6 @@ npm run dev
 - Select the "Codespaces" tab.
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
 
 ## How can I deploy this project?
 
