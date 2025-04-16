@@ -13,11 +13,12 @@ import {
 } from "@/components/ui/dialog";
 
 interface AdoptionFormProps {
-  petId: string;
+  petId: string; // This should now be a valid UUID
   petName: string;
+  ownerId: string; // Add ownerId prop (UUID)
 }
 
-export const AdoptionForm = ({ petId, petName }: AdoptionFormProps) => {
+export const AdoptionForm = ({ petId, petName, ownerId }: AdoptionFormProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
@@ -36,47 +37,59 @@ export const AdoptionForm = ({ petId, petName }: AdoptionFormProps) => {
       return;
     }
 
-    try {
-      setIsSubmitting(true);
-
-      console.log('Submitting adoption application:', {
-        pet_id: petId,
-        user_id: user.id,
-        notes: notes,
-        status: 'pending',
-        application_date: new Date().toISOString()
+    // Basic validation for notes
+    if (!notes.trim()) {
+       toast({
+        title: "Notes Required",
+        description: "Please tell us why you'd like to adopt this pet.",
+        variant: "destructive",
       });
+      return;
+    }
 
+    setIsSubmitting(true);
+    try {
+      // Removed the redundant pet check here, assuming PetDetail already verified availability
+      
+      // Submit the adoption application to 'AdoptionRecords' table
       const { data, error } = await supabase
-        .from('adoptions')
+        .from('AdoptionRecords') // Use correct table name
         .insert({
-          pet_id: petId, // Don't convert to string - keep as UUID
-          user_id: user.id,
-          notes: notes,
-          status: 'pending',
-          application_date: new Date().toISOString()
+          pet_id: petId,             // Use UUID from props
+          adopter_id: user.id,       // Current user's UUID
+          previous_owner_id: ownerId,// Owner's UUID from props
+          status: 'pending',          // Initial status
+          application_date: new Date().toISOString(),
+          notes: notes.trim()        // Trim notes
         })
-        .select()
+        .select() // Optionally select the inserted row
         .single();
 
       if (error) {
-        console.error('Supabase error:', error);
-        throw error;
+        console.error('Supabase error submitting adoption:', error);
+        // Provide more specific feedback if possible (e.g., check RLS policies)
+        if (error.code === '23503') { // Foreign key violation
+           throw new Error('Invalid pet or user ID referenced.');
+        } else if (error.code === '42501') { // RLS policy violation
+           throw new Error('Permission denied. Check database policies.');
+        } else {
+           throw new Error(error.message || 'Failed to submit application.');
+        }
       }
 
-      console.log('Adoption application submitted:', data);
+      console.log('Adoption application submitted:', data); // Log success data
 
       toast({
         title: "Application submitted!",
         description: `Your application to adopt ${petName} has been submitted. We'll review it and get back to you soon.`,
       });
 
-      setNotes("");
-      setIsOpen(false);
+      setNotes(""); // Clear notes
+      setIsOpen(false); // Close dialog
     } catch (error) {
-      console.error('Error details:', error);
+      console.error('Error submitting adoption form:', error);
       toast({
-        title: "Error",
+        title: "Submission Error",
         description: error instanceof Error ? error.message : "There was an error submitting your application. Please try again.",
         variant: "destructive",
       });
@@ -95,18 +108,24 @@ export const AdoptionForm = ({ petId, petName }: AdoptionFormProps) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Adopt {petName}</DialogTitle>
+          {/* Optional: Add DialogDescription for accessibility */}
+          {/* <DialogDescription> 
+            Fill out the form below to apply for adoption.
+          </DialogDescription> */}
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label htmlFor="adoptionNotes" className="block text-sm font-medium mb-2">
               Why would you like to adopt {petName}?
             </label>
             <Textarea
+              id="adoptionNotes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Tell us why you'd be a great match..."
+              placeholder="Tell us why you'd be a great match... (required)"
               rows={4}
               className="w-full"
+              required // HTML5 required attribute
             />
           </div>
           <Button 
@@ -129,4 +148,4 @@ const pet = {
   name: "Buddy", // Replace with the pet's name
 };
 
-<AdoptionForm petId={pet.id} petName={pet.name} />;
+<AdoptionForm petId={pet.id} petName={pet.name} ownerId={pet.id} />;
