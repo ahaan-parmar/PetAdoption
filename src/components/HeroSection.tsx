@@ -35,22 +35,22 @@ const HeroSection = () => {
         <div className="flex-1">
           <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
             <img
-              src="https://images.unsplash.com/photo-1535268647677-300dbf3d78d1"
+              src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308"
               alt="Cute cat"
               className="w-full rounded-lg object-cover h-40 shadow-md transform -rotate-2"
             />
             <img
-              src="https://images.unsplash.com/photo-1582562124811-c09040d0a901"
+              src="https://images.unsplash.com/photo-1543466835-00a7907e9de1"
               alt="Cute dog"
               className="w-full rounded-lg object-cover h-48 mt-6 shadow-md transform rotate-3"
             />
             <img
-              src="https://images.unsplash.com/photo-1465379941941-5f9fa6d702cf"
+              src="https://images.unsplash.com/photo-1582562124811-c09040d0a901"
               alt="Cute rabbit"
               className="w-full rounded-lg object-cover h-48 shadow-md transform rotate-2"
             />
             <img
-              src="https://images.unsplash.com/photo-1441057211199-ef20660aee0e"
+              src="https://images.unsplash.com/photo-1444464666168-49d633b86797"
               alt="Cute bird"
               className="w-full rounded-lg object-cover h-40 mt-6 shadow-md transform -rotate-3"
             />

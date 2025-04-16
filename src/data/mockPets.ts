@@ -8,7 +8,7 @@ export const MOCK_PETS: Pet[] = [
     breed: "Golden Retriever",
     age: "3 years",
     gender: "Male",
-    image: "https://images.unsplash.com/photo-1588943211346-0908a1fb0b01",
+    image: "https://images.unsplash.com/photo-1605897472359-85e4b94d685d",
     location: "New York, NY",
     owner_id: "1"
   },
@@ -19,7 +19,7 @@ export const MOCK_PETS: Pet[] = [
     breed: "Siamese",
     age: "2 years",
     gender: "Female",
-    image: "https://images.unsplash.com/photo-1592194996308-7b43878e84a6",
+    image: "https://images.unsplash.com/photo-1570824104453-508955ab713e",
     location: "Boston, MA",
     owner_id: "2"
   },
@@ -30,7 +30,7 @@ export const MOCK_PETS: Pet[] = [
     breed: "Beagle",
     age: "1 year",
     gender: "Male",
-    image: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8",
+    image: "https://images.unsplash.com/photo-1505628346881-b72b27e84530",
     location: "Chicago, IL",
     owner_id: "3"
   },
@@ -41,7 +41,7 @@ export const MOCK_PETS: Pet[] = [
     breed: "Bengal",
     age: "4 years",
     gender: "Female",
-    image: "https://images.unsplash.com/photo-1618826411640-d6df44dd3f7a",
+    image: "https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8",
     location: "Austin, TX",
     owner_id: "4"
   },
@@ -52,7 +52,7 @@ export const MOCK_PETS: Pet[] = [
     breed: "German Shepherd",
     age: "5 years",
     gender: "Male",
-    image: "https://images.unsplash.com/photo-1605897472359-85e4b94c703f",
+    image: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95",
     location: "Seattle, WA",
     owner_id: "5"
   },
@@ -63,7 +63,7 @@ export const MOCK_PETS: Pet[] = [
     breed: "Maine Coon",
     age: "3 years",
     gender: "Male",
-    image: "https://images.unsplash.com/photo-1595433707802-6b2626ef1c91",
+    image: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb",
     location: "Denver, CO",
     owner_id: "6"
   },
@@ -74,7 +74,7 @@ export const MOCK_PETS: Pet[] = [
     breed: "Poodle",
     age: "2 years",
     gender: "Female",
-    image: "https://images.unsplash.com/photo-1591946614720-90a587da4a36",
+    image: "https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb",
     location: "Portland, OR",
     owner_id: "7"
   },
@@ -85,7 +85,7 @@ export const MOCK_PETS: Pet[] = [
     breed: "Ragdoll",
     age: "1 year",
     gender: "Female",
-    image: "https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e",
+    image: "https://images.unsplash.com/photo-1583795128727-6ec3642408f8",
     location: "Miami, FL",
     owner_id: "8"
   },
@@ -107,7 +107,7 @@ export const MOCK_PETS: Pet[] = [
     breed: "Persian",
     age: "5 years",
     gender: "Female",
-    image: "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec",
+    image: "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55",
     location: "Washington, DC",
     owner_id: "10"
   },
@@ -118,7 +118,7 @@ export const MOCK_PETS: Pet[] = [
     breed: "Boxer",
     age: "2 years",
     gender: "Male",
-    image: "https://images.unsplash.com/photo-1534361960057-19889db9621e",
+    image: "https://images.unsplash.com/photo-1553882809-a4f57e59501d",
     location: "Atlanta, GA",
     owner_id: "11"
   },
@@ -140,7 +140,7 @@ export const MOCK_PETS: Pet[] = [
     breed: "Holland Lop",
     age: "1 year",
     gender: "Male",
-    image: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308",
+    image: "https://images.unsplash.com/photo-1535241749838-299277b6305f",
     location: "Phoenix, AZ",
     owner_id: "13"
   }
