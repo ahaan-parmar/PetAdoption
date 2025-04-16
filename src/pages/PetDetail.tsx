@@ -22,9 +22,12 @@ import {
   Share2 
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { Pet } from "@/components/PetCard";
-import { MOCK_PETS } from "@/data/mockPets";
 import { AdoptionForm } from "@/components/pets/AdoptionForm";
+import { supabase } from "@/integrations/supabase/client";
+import { Database as SupabaseDatabase } from "@/types/supabase";
+
+// Define the Pet type based on your Supabase schema
+export type Pet = SupabaseDatabase["public"]["Tables"]["pets"]["Row"];
 
 const PetDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,14 +37,34 @@ const PetDetail = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Simulate API fetch
-    setIsLoading(true);
-    setTimeout(() => {
-      const foundPet = MOCK_PETS.find((p) => p.id === id);
-      console.log('Found pet:', foundPet);
-      setPet(foundPet || null);
-      setIsLoading(false);
-    }, 1000);
+    const fetchPet = async () => {
+      if (!id) {
+        setIsLoading(false);
+        return;
+      }
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('pets')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (error) {
+          console.error('Error fetching pet detail:', error);
+          setPet(null);
+        } else {
+          setPet(data);
+        }
+      } catch (err) {
+        console.error('Exception fetching pet detail:', err);
+        setPet(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPet();
   }, [id]);
 
   const toggleFavorite = () => {
@@ -124,16 +147,14 @@ const PetDetail = () => {
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Pet Image */}
           <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden shadow-md">
             <img 
-              src={pet.image} 
+              src={pet.image_url || 'default-placeholder.png'}
               alt={pet.name} 
               className="absolute inset-0 w-full h-full object-cover"
             />
           </div>
 
-          {/* Pet Info */}
           <div>
             <div className="flex items-start justify-between mb-4">
               <div>
@@ -178,9 +199,10 @@ const PetDetail = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p>
-                  {pet.name} is a loving {pet.age} {pet.gender.toLowerCase()} {pet.breed}. 
-                  {pet.gender === "Male" ? "He" : "She"} is playful, friendly, and looking for a forever home. 
-                  {pet.gender === "Male" ? "He" : "She"} gets along well with children and other pets.
+                  {pet.description || 
+                    `${pet.name} is a loving ${pet.age} ${pet.gender?.toLowerCase()} ${pet.breed}. ` +
+                    `${pet.gender === "Male" ? "He" : "She"} is looking for a forever home.`
+                  }
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center">
@@ -197,7 +219,7 @@ const PetDetail = () => {
                   </div>
                   <div className="flex items-center">
                     <Info className="h-5 w-5 text-muted-foreground mr-2" />
-                    <span>Status: Available</span>
+                    <span>Status: {pet.status}</span>
                   </div>
                 </div>
               </CardContent>
@@ -222,7 +244,6 @@ const PetDetail = () => {
                 <AdoptionForm 
                   petId={pet.id} 
                   petName={pet.name}
-                  ownerId={pet.owner_id} 
                 />
               </CardContent>
             </Card>

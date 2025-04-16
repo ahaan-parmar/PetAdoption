@@ -7,17 +7,17 @@ import { Heart } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/types/supabase";
 
-export interface Pet {
-  id: string;
-  name: string;
-  species: string;
-  breed: string;
-  age: string;
-  gender: string;
-  image: string;
-  location: string;
-  owner_id: string;
+type Pet = Database["public"]["Tables"]["pets"]["Row"];
+
+// Explicitly define the structure expected for pet_likes
+// Adjust columns if your actual pet_likes table is different
+interface PetLike {
+  id: string; // Assuming pet_likes has its own primary key
+  user_id: string;
+  pet_id: string;
+  created_at: string;
 }
 
 interface PetCardProps {
@@ -33,17 +33,32 @@ const PetCard = ({ pet }: PetCardProps) => {
     if (user) {
       checkIfLiked();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, pet.id]);
 
   const checkIfLiked = async () => {
-    const { data } = await supabase
-      .from('pet_likes')
-      .select('id')
-      .eq('pet_id', pet.id)
-      .eq('user_id', user?.id)
-      .single();
-    
-    setIsFavorite(!!data);
+    if (!user?.id) return;
+    try {
+      console.log(`PetCard: Checking like status for pet ${pet.id}, user ${user.id}`);
+      const { data, error } = await supabase
+        .from('pet_likes')
+        .select('pet_id')
+        .eq('pet_id', pet.id)
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Error checking favorite status:", error);
+        setIsFavorite(false);
+      } else {
+        console.log(`PetCard: Like status check result for pet ${pet.id}:`, data);
+        setIsFavorite(!!data);
+      }
+
+    } catch (error) {
+      console.error("Catch block error checking favorite status:", error);
+      setIsFavorite(false);
+    }
   };
 
   const toggleFavorite = async (e: React.MouseEvent) => {
@@ -59,31 +74,50 @@ const PetCard = ({ pet }: PetCardProps) => {
       return;
     }
 
+    const currentPetId = pet.id;
+    const currentUserId = user.id;
+
     try {
+      let operationError: any = null;
       if (isFavorite) {
-        await supabase
+        const { error } = await supabase
           .from('pet_likes')
           .delete()
-          .eq('pet_id', pet.id)
-          .eq('user_id', user.id);
+          .eq('pet_id', currentPetId)
+          .eq('user_id', currentUserId);
+        operationError = error;
+        if (error) {
+          // console.error("PetCard: Error deleting favorite:", error);
+        } else {
+          // console.log("PetCard: Successfully deleted favorite record (or no record found to delete).");
+        }
       } else {
-        await supabase
+        const { error } = await supabase
           .from('pet_likes')
-          .insert([
-            { pet_id: pet.id, user_id: user.id }
-          ]);
+          .insert({ pet_id: currentPetId, user_id: currentUserId })
+          .select();
+        operationError = error;
+         if (error) {
+           // console.error("PetCard: Error inserting favorite:", error);
+         } else {
+          // console.log("PetCard: Successfully inserted favorite record.");
+         }
       }
 
-      setIsFavorite(!isFavorite);
-      
+      if (operationError) {
+        throw operationError; 
+      }
+
+      const newState = !isFavorite;
+      setIsFavorite(newState);
       toast({
         title: isFavorite ? "Removed from favorites" : "Added to favorites",
-        description: isFavorite 
-          ? `${pet.name} has been removed from your favorites.` 
-          : `${pet.name} has been added to your favorites.`,
+        description: `${pet.name} has been ${isFavorite ? 'removed from' : 'added to'} your favorites.`,
         duration: 3000,
       });
+
     } catch (error) {
+      console.error("Error updating favorite:", error);
       toast({
         title: "Error",
         description: "There was an error updating your favorites",
@@ -97,7 +131,7 @@ const PetCard = ({ pet }: PetCardProps) => {
       <Card className="overflow-hidden pet-card h-full flex flex-col">
         <div className="relative">
           <img
-            src={pet.image}
+            src={pet.image_url || 'default-placeholder.png'}
             alt={pet.name}
             className="w-full h-48 object-cover"
           />

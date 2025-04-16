@@ -15,10 +15,9 @@ import {
 interface AdoptionFormProps {
   petId: string; // This should now be a valid UUID
   petName: string;
-  ownerId: string; // Add ownerId prop (UUID)
 }
 
-export const AdoptionForm = ({ petId, petName, ownerId }: AdoptionFormProps) => {
+export const AdoptionForm = ({ petId, petName }: AdoptionFormProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
@@ -51,14 +50,13 @@ export const AdoptionForm = ({ petId, petName, ownerId }: AdoptionFormProps) => 
     try {
       // Removed the redundant pet check here, assuming PetDetail already verified availability
       
-      // Submit the adoption application to 'AdoptionRecords' table
+      // Submit the adoption application to 'adoptions' table
       const { data, error } = await supabase
-        .from('AdoptionRecords') // Use correct table name
+        .from('adoptions')
         .insert({
           pet_id: petId,             // Use UUID from props
-          adopter_id: user.id,       // Current user's UUID
-          previous_owner_id: ownerId,// Owner's UUID from props
-          status: 'pending',          // Initial status
+          user_id: user.id,          // Current user's UUID
+          status: 'pending',         // Initial status
           application_date: new Date().toISOString(),
           notes: notes.trim()        // Trim notes
         })
@@ -140,12 +138,3 @@ export const AdoptionForm = ({ petId, petName, ownerId }: AdoptionFormProps) => 
     </Dialog>
   );
 };
-
-// In your parent component where AdoptionForm is used
-// Ensure petId is a real UUID like "550e8400-e29b-41d4-a716-446655440000"
-const pet = {
-  id: "550e8400-e29b-41d4-a716-446655440000", // Replace with a valid UUID
-  name: "Buddy", // Replace with the pet's name
-};
-
-<AdoptionForm petId={pet.id} petName={pet.name} ownerId={pet.id} />;

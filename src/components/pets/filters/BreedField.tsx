@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface BreedFieldProps {
   value: string;
@@ -14,68 +15,45 @@ interface BreedFieldProps {
   species: string;
 }
 
-// Breed options by species
-const BREED_OPTIONS: Record<string, string[]> = {
-  "Dog": [
-    "Golden Retriever",
-    "Labrador Retriever",
-    "German Shepherd",
-    "Beagle",
-    "Poodle",
-    "Boxer",
-    "Bulldog",
-    "Pug",
-    "Husky",
-    "Chihuahua"
-  ],
-  "Cat": [
-    "Siamese",
-    "Bengal",
-    "Maine Coon",
-    "Persian",
-    "Ragdoll",
-    "Sphynx",
-    "British Shorthair",
-    "Abyssinian",
-    "Scottish Fold",
-    "Russian Blue"
-  ],
-  "Bird": [
-    "Parakeet",
-    "Cockatiel",
-    "Canary",
-    "Lovebird",
-    "Finch",
-    "Parrot",
-    "Budgie",
-    "Dove",
-    "Pigeon",
-    "Cockatoo"
-  ],
-  "Small": [
-    "Hamster",
-    "Guinea Pig",
-    "Rabbit",
-    "Ferret",
-    "Chinchilla",
-    "Gerbil",
-    "Mouse",
-    "Rat",
-    "Hedgehog",
-    "Sugar Glider"
-  ]
-};
-
 export const BreedField = ({ value, onChange, species }: BreedFieldProps) => {
   const [breeds, setBreeds] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Update breeds based on species
-    if (species && BREED_OPTIONS[species]) {
-      setBreeds(BREED_OPTIONS[species]);
-    } else {
-      setBreeds([]);
-    }
+    const fetchBreeds = async () => {
+      if (!species || species === 'all') {
+        setBreeds([]);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        // Fetch unique breeds for the selected species
+        const { data, error } = await supabase
+          .from('pets')
+          .select('breed')
+          .eq('species', species.charAt(0).toUpperCase() + species.slice(1)) // Capitalize first letter
+          .not('breed', 'is', null);
+
+        if (error) {
+          console.error('Error fetching breeds:', error);
+          return;
+        }
+
+        // Extract unique breeds and sort them
+        const uniqueBreeds = Array.from(new Set(data.map(pet => pet.breed)))
+          .filter(Boolean)
+          .sort();
+
+        setBreeds(uniqueBreeds);
+      } catch (error) {
+        console.error('Error fetching breeds:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBreeds();
   }, [species]);
 
   // Reset value when species changes
@@ -91,10 +69,16 @@ export const BreedField = ({ value, onChange, species }: BreedFieldProps) => {
       <Select 
         value={value} 
         onValueChange={onChange}
-        disabled={!species}
+        disabled={!species || species === 'all' || isLoading}
       >
         <SelectTrigger id="breed">
-          <SelectValue placeholder={species ? "Select breed" : "Select species first"} />
+          <SelectValue 
+            placeholder={
+              isLoading ? "Loading breeds..." : 
+              !species || species === 'all' ? "Select species first" : 
+              "Select breed"
+            } 
+          />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All breeds</SelectItem>
