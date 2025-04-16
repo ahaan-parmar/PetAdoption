@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { PawPrint, Mail, Phone, MapPin } from "lucide-react";
 
@@ -13,7 +12,7 @@ const Footer = () => {
               <span className="text-xl font-bold text-primary">PetPals</span>
             </div>
             <p className="text-muted-foreground">
-              Connecting loving homes with pets in need since 2023.
+              Connecting loving homes with pets in need since 2025.
             </p>
           </div>
 
