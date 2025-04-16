@@ -125,11 +125,11 @@ const PetDetail = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Pet Image */}
-          <div className="rounded-lg overflow-hidden shadow-md">
+          <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden shadow-md">
             <img 
               src={pet.image} 
               alt={pet.name} 
-              className="w-full h-[400px] object-cover"
+              className="absolute inset-0 w-full h-full object-cover"
             />
           </div>
 
@@ -219,7 +219,11 @@ const PetDetail = () => {
                   <Mail className="h-5 w-5 text-muted-foreground mr-2" />
                   <span>adopt@petpals.com</span>
                 </div>
-                <AdoptionForm petId={pet.id} petName={pet.name} />
+                <AdoptionForm 
+                  petId={pet.id} 
+                  petName={pet.name}
+                  ownerId={pet.owner_id} 
+                />
               </CardContent>
             </Card>
           </div>

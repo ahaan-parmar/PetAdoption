@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -18,6 +17,7 @@ export interface Pet {
   gender: string;
   image: string;
   location: string;
+  owner_id: string;
 }
 
 interface PetCardProps {
