@@ -50,7 +50,7 @@ export const AdoptionForm = ({ petId, petName }: AdoptionFormProps) => {
       const { data, error } = await supabase
         .from('adoptions')
         .insert({
-          pet_id: petId,
+          pet_id: petId.toString(),
           user_id: user.id,
           notes: notes,
           status: 'pending',
