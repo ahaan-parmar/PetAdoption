@@ -1,5 +1,3 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Heart, Users, PawPrint, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -7,7 +5,6 @@ import { Link } from "react-router-dom";
 const About = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="bg-primary/5 py-16">
@@ -204,7 +201,6 @@ const About = () => {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 };

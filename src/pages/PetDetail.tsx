@@ -1,8 +1,5 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -27,6 +24,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Pet } from "@/components/PetCard";
 import { MOCK_PETS } from "@/data/mockPets";
+import { AdoptionForm } from "@/components/pets/AdoptionForm";
 
 const PetDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -40,6 +38,7 @@ const PetDetail = () => {
     setIsLoading(true);
     setTimeout(() => {
       const foundPet = MOCK_PETS.find((p) => p.id === id);
+      console.log('Found pet:', foundPet);
       setPet(foundPet || null);
       setIsLoading(false);
     }, 1000);
@@ -79,7 +78,6 @@ const PetDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
         <main className="flex-grow container mx-auto px-4 py-8">
           <div className="animate-pulse-light">
             <div className="h-8 w-32 bg-gray-200 rounded mb-8"></div>
@@ -95,7 +93,6 @@ const PetDetail = () => {
             </div>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -103,7 +100,6 @@ const PetDetail = () => {
   if (!pet) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
         <main className="flex-grow container mx-auto px-4 py-12 text-center">
           <h1 className="text-3xl font-bold mb-4">Pet Not Found</h1>
           <p className="text-muted-foreground mb-8">
@@ -113,14 +109,12 @@ const PetDetail = () => {
             <Button>Browse All Pets</Button>
           </Link>
         </main>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       <main className="flex-grow container mx-auto px-4 py-8">
         <Link 
           to="/pets" 
@@ -225,15 +219,12 @@ const PetDetail = () => {
                   <Mail className="h-5 w-5 text-muted-foreground mr-2" />
                   <span>adopt@petpals.com</span>
                 </div>
-                <Button className="w-full mt-2 bg-primary hover:bg-primary/90">
-                  Apply to Adopt
-                </Button>
+                <AdoptionForm petId={pet.id} petName={pet.name} />
               </CardContent>
             </Card>
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

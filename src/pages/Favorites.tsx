@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { PetGrid } from "@/components/pets/PetGrid";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,7 +57,6 @@ const Favorites = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Your Favorite Pets</h1>
@@ -74,7 +71,6 @@ const Favorites = () => {
           onClearFilters={handleClearFilters}
         />
       </main>
-      <Footer />
     </div>
   );
 };

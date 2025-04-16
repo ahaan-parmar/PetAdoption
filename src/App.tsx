@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PrivateRoute } from "@/components/PrivateRoute";
+import Layout from "@/components/Layout";
 
 // Pages
 import Index from "./pages/Index";
@@ -34,52 +35,72 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
         <BrowserRouter>
+          <Toaster />
+          <Sonner />
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route 
-              path="/profile" 
-              element={
-                <PrivateRoute>
-                  <Profile />
-                </PrivateRoute>
-              } 
-            />
-            <Route path="/pets" element={<AllPets />} />
-            <Route 
-              path="/pets/:id" 
-              element={
-                <PrivateRoute>
-                  <PetDetail />
-                </PrivateRoute>
-              } 
-            />
-            <Route 
-              path="/favorites" 
-              element={
-                <PrivateRoute>
-                  <Favorites />
-                </PrivateRoute>
-              } 
-            />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/donate" element={<Donate />} />
-            <Route path="/volunteer" element={<Volunteer />} />
+            <Route element={<Layout />}>
+              {/* Public Routes */}
+              <Route index element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/pets" element={<AllPets />} />
+              
+              {/* Protected Routes */}
+              <Route 
+                path="/profile" 
+                element={
+                  <PrivateRoute>
+                    <Profile />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/pets/:id" 
+                element={
+                  <PrivateRoute>
+                    <PetDetail />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/favorites" 
+                element={
+                  <PrivateRoute>
+                    <Favorites />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/donate" 
+                element={
+                  <PrivateRoute>
+                    <Donate />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/volunteer" 
+                element={
+                  <PrivateRoute>
+                    <Volunteer />
+                  </PrivateRoute>
+                } 
+              />
 
-            {/* Category Routes */}
-            <Route path="/categories/dogs" element={<Dogs />} />
-            <Route path="/categories/cats" element={<Cats />} />
-            <Route path="/categories/birds" element={<Birds />} />
-            <Route path="/categories/small-animals" element={<SmallAnimals />} />
+              {/* Category Routes */}
+              <Route path="/categories/dogs" element={<Dogs />} />
+              <Route path="/categories/cats" element={<Cats />} />
+              <Route path="/categories/birds" element={<Birds />} />
+              <Route path="/categories/small-animals" element={<SmallAnimals />} />
 
-            <Route path="*" element={<NotFound />} />
+              {/* 404 Route */}
+              <Route path="*" element={<NotFound />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

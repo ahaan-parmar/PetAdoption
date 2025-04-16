@@ -51,6 +51,12 @@ const Navbar = () => {
             <Link to="/pets" className="font-medium hover:text-primary transition-colors">
               Find Pets
             </Link>
+            <Link to="/volunteer" className="font-medium hover:text-primary transition-colors">
+              Volunteer
+            </Link>
+            <Link to="/donate" className="font-medium hover:text-primary transition-colors">
+              Donate
+            </Link>
             <Link to="/about" className="font-medium hover:text-primary transition-colors">
               About
             </Link>
@@ -123,6 +129,20 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               Find Pets
+            </Link>
+            <Link 
+              to="/volunteer" 
+              className="block font-medium py-2 hover:bg-muted px-2 rounded-md"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Volunteer
+            </Link>
+            <Link 
+              to="/donate" 
+              className="block font-medium py-2 hover:bg-muted px-2 rounded-md"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Donate
             </Link>
             <Link 
               to="/about" 

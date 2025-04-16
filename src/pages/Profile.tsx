@@ -13,8 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { User, Mail, Camera } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -180,90 +178,86 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow flex items-center justify-center py-12 px-4">
-        <div className="w-full max-w-md">
-          <Card>
-            <CardHeader className="space-y-1">
-              <div className="flex justify-center mb-4">
-                <div className="relative">
-                  <div className="w-24 h-24 rounded-full overflow-hidden bg-muted flex items-center justify-center">
-                    {isUploading ? (
-                      <div className="flex items-center justify-center w-full h-full bg-muted">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                      </div>
-                    ) : profileData.avatar_url ? (
-                      <img
-                        src={profileData.avatar_url}
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <User className="w-12 h-12 text-muted-foreground" />
-                    )}
-                  </div>
-                  <label
-                    htmlFor="avatar-upload"
-                    className={`absolute bottom-0 right-0 p-1 rounded-full bg-primary hover:bg-primary/90 cursor-pointer transition-opacity ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
-                    <Camera className="h-4 w-4 text-white" />
-                    <input
-                      id="avatar-upload"
-                      type="file"
-                      accept="image/jpeg,image/png,image/gif"
-                      className="hidden"
-                      onChange={handleAvatarUpload}
-                      disabled={isUploading}
+    <div className="flex-1 flex items-center justify-center py-12 px-4">
+      <div className="w-full max-w-md">
+        <Card>
+          <CardHeader className="space-y-1">
+            <div className="flex justify-center mb-4">
+              <div className="relative">
+                <div className="w-24 h-24 rounded-full overflow-hidden bg-muted flex items-center justify-center">
+                  {isUploading ? (
+                    <div className="flex items-center justify-center w-full h-full bg-muted">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    </div>
+                  ) : profileData.avatar_url ? (
+                    <img
+                      src={profileData.avatar_url}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
                     />
-                  </label>
+                  ) : (
+                    <User className="w-12 h-12 text-muted-foreground" />
+                  )}
                 </div>
+                <label
+                  htmlFor="avatar-upload"
+                  className={`absolute bottom-0 right-0 p-1 rounded-full bg-primary hover:bg-primary/90 cursor-pointer transition-opacity ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  <Camera className="h-4 w-4 text-white" />
+                  <input
+                    id="avatar-upload"
+                    type="file"
+                    accept="image/jpeg,image/png,image/gif"
+                    className="hidden"
+                    onChange={handleAvatarUpload}
+                    disabled={isUploading}
+                  />
+                </label>
               </div>
-              <CardTitle className="text-2xl text-center">Your Profile</CardTitle>
-              <CardDescription className="text-center">
-                Update your personal information
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit}>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName">Full Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="fullName"
-                        value={profileData.fullName}
-                        onChange={(e) => setProfileData(prev => ({ ...prev, fullName: e.target.value }))}
-                        className="pl-10"
-                        placeholder="John Doe"
-                      />
-                    </div>
+            </div>
+            <CardTitle className="text-2xl text-center">Your Profile</CardTitle>
+            <CardDescription className="text-center">
+              Update your personal information
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Full Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="fullName"
+                      value={profileData.fullName}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, fullName: e.target.value }))}
+                      className="pl-10"
+                      placeholder="John Doe"
+                    />
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="email"
-                        value={profileData.email}
-                        className="pl-10"
-                        disabled
-                      />
-                    </div>
-                  </div>
-
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Saving..." : "Save Changes"}
-                  </Button>
                 </div>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-      <Footer />
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      value={profileData.email}
+                      className="pl-10"
+                      disabled
+                    />
+                  </div>
+                </div>
+
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? "Saving..." : "Save Changes"}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

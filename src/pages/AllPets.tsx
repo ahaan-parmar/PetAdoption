@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Filter, X, Clock } from "lucide-react";
 import { PetFilters } from "@/components/pets/PetFilters";
@@ -145,73 +143,69 @@ const AllPets = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        {/* Recently Added Section */}
-        <div className="mb-12">
-          <div className="flex items-center gap-2 mb-6">
-            <Clock className="w-5 h-5 text-primary" />
-            <h2 className="text-2xl font-semibold">Recently Added</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {recentPets.map((pet) => (
-              <PetCard key={pet.id} pet={pet} />
-            ))}
-          </div>
+    <main className="container mx-auto px-4 py-8">
+      {/* Recently Added Section */}
+      <div className="mb-12">
+        <div className="flex items-center gap-2 mb-6">
+          <Clock className="w-5 h-5 text-primary" />
+          <h2 className="text-2xl font-semibold">Recently Added</h2>
         </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {recentPets.map((pet) => (
+            <PetCard key={pet.id} pet={pet} />
+          ))}
+        </div>
+      </div>
 
-        {/* Main Search Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Find Your Perfect Pet</h1>
-            <p className="text-muted-foreground">
-              Browse our available pets for adoption
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 mt-4 md:mt-0 w-full sm:w-auto">
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="newest">Newest First</SelectItem>
-                <SelectItem value="name">Name A-Z</SelectItem>
-                <SelectItem value="age">Age: Youngest First</SelectItem>
-                <SelectItem value="oldest">Age: Oldest First</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button
-              variant="outline"
-              className="gap-2"
-              onClick={() => setIsFilterVisible(!isFilterVisible)}
-            >
-              {isFilterVisible ? <X className="h-4 w-4" /> : <Filter className="h-4 w-4" />}
-              {isFilterVisible ? "Hide Filters" : "Show Filters"}
-            </Button>
-          </div>
+      {/* Main Search Section */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Find Your Perfect Pet</h1>
+          <p className="text-muted-foreground">
+            Browse our available pets for adoption
+          </p>
         </div>
+        <div className="flex flex-col sm:flex-row gap-4 mt-4 md:mt-0 w-full sm:w-auto">
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="newest">Newest First</SelectItem>
+              <SelectItem value="name">Name A-Z</SelectItem>
+              <SelectItem value="age">Age: Youngest First</SelectItem>
+              <SelectItem value="oldest">Age: Oldest First</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button
+            variant="outline"
+            className="gap-2"
+            onClick={() => setIsFilterVisible(!isFilterVisible)}
+          >
+            {isFilterVisible ? <X className="h-4 w-4" /> : <Filter className="h-4 w-4" />}
+            {isFilterVisible ? "Hide Filters" : "Show Filters"}
+          </Button>
+        </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className={`lg:block ${isFilterVisible ? "block" : "hidden"}`}>
-            <PetFilters 
-              filters={filters}
-              onFilterChange={handleFilterChange}
-              onSubmit={handleSearch}
-              onClear={clearFilters}
-            />
-          </div>
-          <div className="lg:col-span-3">
-            <PetGrid 
-              isLoading={isLoading}
-              pets={filteredPets}
-              onClearFilters={clearFilters}
-            />
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className={`lg:block ${isFilterVisible ? "block" : "hidden"}`}>
+          <PetFilters 
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onSubmit={handleSearch}
+            onClear={clearFilters}
+          />
         </div>
-      </main>
-      <Footer />
-    </div>
+        <div className="lg:col-span-3">
+          <PetGrid 
+            isLoading={isLoading}
+            pets={filteredPets}
+            onClearFilters={clearFilters}
+          />
+        </div>
+      </div>
+    </main>
   );
 };
 
