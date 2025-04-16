@@ -50,7 +50,7 @@ export const AdoptionForm = ({ petId, petName }: AdoptionFormProps) => {
       const { data, error } = await supabase
         .from('adoptions')
         .insert({
-          pet_id: petId.toString(),
+          pet_id: petId, // Don't convert to string - keep as UUID
           user_id: user.id,
           notes: notes,
           status: 'pending',
@@ -121,3 +121,12 @@ export const AdoptionForm = ({ petId, petName }: AdoptionFormProps) => {
     </Dialog>
   );
 };
+
+// In your parent component where AdoptionForm is used
+// Ensure petId is a real UUID like "550e8400-e29b-41d4-a716-446655440000"
+const pet = {
+  id: "550e8400-e29b-41d4-a716-446655440000", // Replace with a valid UUID
+  name: "Buddy", // Replace with the pet's name
+};
+
+<AdoptionForm petId={pet.id} petName={pet.name} />;
