@@ -1,4 +1,3 @@
-
 import { Pet } from "@/components/PetCard";
 
 export const MOCK_PETS: Pet[] = [
@@ -10,7 +9,8 @@ export const MOCK_PETS: Pet[] = [
     age: "3 years",
     gender: "Male",
     image: "https://images.unsplash.com/photo-1588943211346-0908a1fb0b01",
-    location: "New York, NY"
+    location: "New York, NY",
+    owner_id: "1"
   },
   {
     id: "2",
@@ -20,7 +20,8 @@ export const MOCK_PETS: Pet[] = [
     age: "2 years",
     gender: "Female",
     image: "https://images.unsplash.com/photo-1592194996308-7b43878e84a6",
-    location: "Boston, MA"
+    location: "Boston, MA",
+    owner_id: "2"
   },
   {
     id: "3",
@@ -30,7 +31,8 @@ export const MOCK_PETS: Pet[] = [
     age: "1 year",
     gender: "Male",
     image: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8",
-    location: "Chicago, IL"
+    location: "Chicago, IL",
+    owner_id: "3"
   },
   {
     id: "4",
@@ -40,7 +42,8 @@ export const MOCK_PETS: Pet[] = [
     age: "4 years",
     gender: "Female",
     image: "https://images.unsplash.com/photo-1618826411640-d6df44dd3f7a",
-    location: "Austin, TX"
+    location: "Austin, TX",
+    owner_id: "4"
   },
   {
     id: "5",
@@ -49,8 +52,9 @@ export const MOCK_PETS: Pet[] = [
     breed: "German Shepherd",
     age: "5 years",
     gender: "Male",
-    image: "https://images.unsplash.com/photo-1589941013454-f9536e427f6a",
-    location: "Seattle, WA"
+    image: "https://images.unsplash.com/photo-1605897472359-85e4b94c703f",
+    location: "Seattle, WA",
+    owner_id: "5"
   },
   {
     id: "6",
@@ -60,7 +64,8 @@ export const MOCK_PETS: Pet[] = [
     age: "3 years",
     gender: "Male",
     image: "https://images.unsplash.com/photo-1595433707802-6b2626ef1c91",
-    location: "Denver, CO"
+    location: "Denver, CO",
+    owner_id: "6"
   },
   {
     id: "7",
@@ -70,7 +75,8 @@ export const MOCK_PETS: Pet[] = [
     age: "2 years",
     gender: "Female",
     image: "https://images.unsplash.com/photo-1591946614720-90a587da4a36",
-    location: "Portland, OR"
+    location: "Portland, OR",
+    owner_id: "7"
   },
   {
     id: "8",
@@ -80,7 +86,8 @@ export const MOCK_PETS: Pet[] = [
     age: "1 year",
     gender: "Female",
     image: "https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e",
-    location: "Miami, FL"
+    location: "Miami, FL",
+    owner_id: "8"
   },
   {
     id: "9",
@@ -90,7 +97,8 @@ export const MOCK_PETS: Pet[] = [
     age: "4 years",
     gender: "Male",
     image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1",
-    location: "San Francisco, CA"
+    location: "San Francisco, CA",
+    owner_id: "9"
   },
   {
     id: "10",
@@ -100,7 +108,8 @@ export const MOCK_PETS: Pet[] = [
     age: "5 years",
     gender: "Female",
     image: "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec",
-    location: "Washington, DC"
+    location: "Washington, DC",
+    owner_id: "10"
   },
   {
     id: "11",
@@ -110,7 +119,8 @@ export const MOCK_PETS: Pet[] = [
     age: "2 years",
     gender: "Male",
     image: "https://images.unsplash.com/photo-1534361960057-19889db9621e",
-    location: "Atlanta, GA"
+    location: "Atlanta, GA",
+    owner_id: "11"
   },
   {
     id: "12",
@@ -119,7 +129,19 @@ export const MOCK_PETS: Pet[] = [
     breed: "Parakeet",
     age: "1 year",
     gender: "Female",
-    image: "https://images.unsplash.com/photo-1452570053594-1b985d6ea890",
-    location: "Dallas, TX"
+    image: "https://images.unsplash.com/photo-1522926193341-e9ffd686c60f",
+    location: "Dallas, TX",
+    owner_id: "12"
+  },
+  {
+    id: "13",
+    name: "Hoppy",
+    species: "Rabbit",
+    breed: "Holland Lop",
+    age: "1 year",
+    gender: "Male",
+    image: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308",
+    location: "Phoenix, AZ",
+    owner_id: "13"
   }
 ];
